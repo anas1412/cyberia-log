@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cyberia Log - Free Trading Journal to Quantify Your Edge</title>
+    <meta
+      name="description"
+      content="Stop trading blind. Cyberia Log is a free, modern trading journal available online or self-hosted. Turn your trade history into actionable intelligence and a real trading edge."
+    />
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- Alpine.js for Interactivity -->
+    <script
+      defer
+      src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"
+    ></script>
+
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&family=Fira+Code:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+        background-color: #0f172a; /* slate-900 */
+        color: #cbd5e1; /* slate-300 */
+        overflow-x: hidden;
+      }
+
+      .font-mono {
+        font-family: "Fira Code", monospace;
+      }
+
+      [x-cloak] {
+        display: none !important;
+      }
+
+      .text-glow {
+        text-shadow: 0 0 5px rgba(34, 211, 238, 0.4),
+          0 0 10px rgba(34, 211, 238, 0.4);
+      }
+
+      .btn-glow:hover {
+        box-shadow: 0 0 15px rgba(34, 211, 238, 0.5),
+          0 0 5px rgba(34, 211, 238, 0.5);
+      }
+
+      .bg-grid {
+        background-image: linear-gradient(
+            to right,
+            rgba(22, 78, 99, 0.3) 1px,
+            transparent 1px
+          ),
+          linear-gradient(to bottom, rgba(22, 78, 99, 0.3) 1px, transparent 1px);
+        background-size: 4rem 4rem;
+        background-position: -1px -1px;
+      }
+
+      /* Typing Cursor Animation */
+      .typing-cursor {
+        display: inline-block;
+        width: 10px;
+        height: 2.25rem;
+        background-color: #22d3ee; /* cyan-400 */
+        animation: blink 1s infinite;
+        margin-left: 0.5rem;
+      }
+
+      @keyframes blink {
+        0%,
+        100% {
+          opacity: 1;
+        }
+        50% {
+          opacity: 0;
+        }
+      }
+
+      /* Scroll-reveal Animation */
+      [data-scroll-reveal] {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+      }
+      [data-scroll-reveal].is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    </style>
+  </head>
+
+  <body class="bg-slate-900 bg-grid">
+    <!-- Header -->
+    <header class="absolute top-0 left-0 w-full z-10 py-4 px-4 sm:px-6 lg:px-8">
+      <div class="container mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-bold text-cyan-400 text-glow">Cyberia Log</h1>
+        <a
+          href="https://cyberia.tn"
+          target="_blank"
+          class="hidden sm:inline-block px-6 py-2 text-sm font-bold text-slate-900 bg-cyan-400 rounded-md transition-all duration-300 hover:bg-cyan-300 btn-glow"
+        >
+          Launch App
+        </a>
+      </div>
+    </header>
+
+    <main>
+      <!-- Hero Section -->
+      <section
+        class="relative min-h-screen flex items-center justify-center text-center overflow-hidden px-4"
+      >
+        <div class="z-10">
+          <h2 class="font-mono text-lg text-cyan-400 mb-4" data-scroll-reveal>
+            SYSTEM.INITIALIZING_EDGE_ANALYSIS
+          </h2>
+          <h1
+            class="text-4xl sm:text-6xl md:text-7xl font-black text-slate-100 uppercase tracking-tighter"
+            data-scroll-reveal
+          >
+            Stop Trading Blind.
+          </h1>
+          <h1
+            class="text-4xl sm:text-6xl md:text-7xl font-black text-glow text-cyan-400 uppercase tracking-tighter mt-2"
+            data-scroll-reveal
+          >
+            <span id="animated-text"></span><span class="typing-cursor"></span>
+          </h1>
+          <p
+            class="max-w-2xl mx-auto mt-6 text-lg text-slate-400"
+            data-scroll-reveal
+          >
+            Cyberia Log is a free, powerful trading journal designed to turn
+            your raw trade history into actionable intelligence. Use it online
+            or host it yourself.
+          </p>
+          <div
+            class="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4"
+            data-scroll-reveal
+          >
+            <a
+              href="https://cyberia.tn"
+              target="_blank"
+              class="w-full sm:w-auto px-10 py-4 text-lg font-bold text-slate-900 bg-cyan-400 rounded-md transition-all duration-300 hover:bg-cyan-300 btn-glow"
+            >
+              Launch Online Version
+            </a>
+            <a
+              href="https://github.com/anas1412/cyberia-log"
+              target="_blank"
+              class="w-full sm:w-auto px-10 py-4 text-lg font-bold text-cyan-400 bg-transparent border-2 border-cyan-400 rounded-md transition-all duration-300 hover:bg-cyan-400/20"
+            >
+              Host It Yourself (GitHub)
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- Problem/Solution Section -->
+      <section class="py-20 sm:py-32 px-4">
+        <div class="container mx-auto text-center">
+          <h2
+            class="text-3xl sm:text-4xl font-bold text-slate-100 mb-4"
+            data-scroll-reveal
+          >
+            Is This You?
+          </h2>
+          <p
+            class="text-lg text-slate-400 max-w-3xl mx-auto mb-16"
+            data-scroll-reveal
+          >
+            Every trader hits a wall. Your strategy feels random, emotions take
+            over, and you're not sure why you're losing. Sound familiar?
+          </p>
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Card 1 -->
+            <div
+              class="bg-slate-800/50 p-8 rounded-lg border border-slate-700"
+              data-scroll-reveal
+            >
+              <svg
+                class="w-12 h-12 mx-auto mb-4 text-red-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 10V3L4 14h7v7l9-11h-7z"
+                />
+              </svg>
+              <h3 class="text-xl font-bold text-slate-100 mb-2">
+                Emotional Decisions
+              </h3>
+              <p class="text-slate-400">
+                Revenge trading after a loss? Closing winners too early out of
+                fear? Your emotions are costing you money.
+              </p>
+            </div>
+            <!-- Card 2 -->
+            <div
+              class="bg-slate-800/50 p-8 rounded-lg border border-slate-700"
+              data-scroll-reveal
+            >
+              <svg
+                class="w-12 h-12 mx-auto mb-4 text-yellow-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"
+                />
+              </svg>
+              <h3 class="text-xl font-bold text-slate-100 mb-2">
+                No Clear Data
+              </h3>
+              <p class="text-slate-400">
+                You *think* you know which setups work best, but you don't have
+                the hard data to prove it. It's all guesswork.
+              </p>
+            </div>
+            <!-- Card 3 -->
+            <div
+              class="bg-slate-800/50 p-8 rounded-lg border border-slate-700"
+              data-scroll-reveal
+            >
+              <svg
+                class="w-12 h-12 mx-auto mb-4 text-green-400"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                />
+              </svg>
+              <h3 class="text-xl font-bold text-slate-100 mb-2">
+                Stagnant Growth
+              </h3>
+              <p class="text-slate-400">
+                Your account balance is a rollercoaster. You're stuck in a cycle
+                of wins and losses with no real progress.
+              </p>
+            </div>
+          </div>
+          <div class="mt-16" data-scroll-reveal>
+            <p class="font-mono text-cyan-400 text-glow">
+              Cyberia Log is the antidote. Turn chaos into clarity.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Section -->
+      <section class="py-20 sm:py-32 px-4 bg-slate-900/70 backdrop-blur-sm">
+        <div class="container mx-auto">
+          <div class="text-center mb-16">
+            <h2
+              class="text-3xl sm:text-4xl font-bold text-slate-100"
+              data-scroll-reveal
+            >
+              Your Personal Analytics Terminal
+            </h2>
+            <p
+              class="text-lg text-slate-400 max-w-3xl mx-auto mt-4"
+              data-scroll-reveal
+            >
+              Everything you need to dissect your performance and build a
+              repeatable edge.
+            </p>
+          </div>
+
+          <div x-data="{ activeTab: 1 }" class="max-w-4xl mx-auto">
+            <!-- Tabs -->
+            <div
+              class="flex justify-center border-b border-slate-700 mb-8"
+              data-scroll-reveal
+            >
+              <button
+                @click="activeTab = 1"
+                :class="{'border-cyan-400 text-cyan-400': activeTab === 1, 'border-transparent text-slate-400 hover:text-slate-200': activeTab !== 1}"
+                class="px-6 py-3 font-medium border-b-2 transition-colors"
+              >
+                Dashboard
+              </button>
+              <button
+                @click="activeTab = 2"
+                :class="{'border-cyan-400 text-cyan-400': activeTab === 2, 'border-transparent text-slate-400 hover:text-slate-200': activeTab !== 2}"
+                class="px-6 py-3 font-medium border-b-2 transition-colors"
+              >
+                Trades
+              </button>
+              <button
+                @click="activeTab = 3"
+                :class="{'border-cyan-400 text-cyan-400': activeTab === 3, 'border-transparent text-slate-400 hover:text-slate-200': activeTab !== 3}"
+                class="px-6 py-3 font-medium border-b-2 transition-colors"
+              >
+                Accounts
+              </button>
+            </div>
+
+            <!-- Content -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+              <!-- Tab 1 Content -->
+              <div x-show="activeTab === 1" x-cloak x-transition.opacity>
+                <h3 class="text-2xl font-bold text-slate-100 mb-4">
+                  Visualize Your Journey
+                </h3>
+                <p class="text-slate-300 mb-4">
+                  See your equity curve in real-time, displayed in dollars or
+                  percentage growth. The interactive dashboard and calendar give
+                  you an instant snapshot of your performance, helping you
+                  identify winning and losing streaks at a glance.
+                </p>
+                <ul class="space-y-2 text-slate-400 list-inside">
+                  <li class="flex items-start">
+                    <span class="text-cyan-400 mr-2">→</span
+                    ><span>Interactive Equity Curve ($ and %)</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-cyan-400 mr-2">→</span
+                    ><span>Daily PnL Calendar</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-cyan-400 mr-2">→</span
+                    ><span>Key Metrics (Win Rate, Profit Factor)</span>
+                  </li>
+                </ul>
+              </div>
+              <!-- Tab 2 Content -->
+              <div x-show="activeTab === 2" x-cloak x-transition.opacity>
+                <h3 class="text-2xl font-bold text-slate-100 mb-4">
+                  Dissect Every Trade
+                </h3>
+                <p class="text-slate-300 mb-4">
+                  Your trade log is your playbook. Filter by setup type,
+                  direction, or outcome to find your A+ setups. Attach
+                  screenshots and notes to learn from every execution, good or
+                  bad. This is where your edge is built.
+                </p>
+                <ul class="space-y-2 text-slate-400 list-inside">
+                  <li class="flex items-start">
+                    <span class="text-cyan-400 mr-2">→</span
+                    ><span>Advanced Filtering & Sorting</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-cyan-400 mr-2">→</span
+                    ><span>Detailed Trade Logging</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-cyan-400 mr-2">→</span
+                    ><span>Screenshot Links & Notes</span>
+                  </li>
+                </ul>
+              </div>
+              <!-- Tab 3 Content -->
+              <div x-show="activeTab === 3" x-cloak x-transition.opacity>
+                <h3 class="text-2xl font-bold text-slate-100 mb-4">
+                  Manage Your Arsenal
+                </h3>
+                <p class="text-slate-300 mb-4">
+                  Whether you're trading a personal account or tackling a prop
+                  firm challenge, keep everything organized. Filter your entire
+                  journal's data by a specific account to analyze its unique
+                  performance and stay on track with its goals.
+                </p>
+                <ul class="space-y-2 text-slate-400 list-inside">
+                  <li class="flex items-start">
+                    <span class="text-cyan-400 mr-2">→</span
+                    ><span>Multi-Account Support</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-cyan-400 mr-2">→</span
+                    ><span>Prop Firm & Personal Types</span>
+                  </li>
+                  <li class="flex items-start">
+                    <span class="text-cyan-400 mr-2">→</span
+                    ><span>Global Account Filtering</span>
+                  </li>
+                </ul>
+              </div>
+
+              <!-- Image Placeholder -->
+              <div
+                class="p-4 bg-slate-800/50 border border-slate-700 rounded-lg"
+                data-scroll-reveal
+              >
+                <img
+                  src="https://i.imgur.com/K72t2p0.png"
+                  alt="Cyberia Log Dashboard Screenshot"
+                  class="rounded-md w-full h-auto shadow-2xl shadow-cyan-500/10"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Creator's Note Section -->
+      <section class="py-20 sm:py-32 px-4">
+        <div class="container mx-auto max-w-3xl text-center">
+          <div
+            class="border-t border-b border-cyan-400/20 py-10"
+            data-scroll-reveal
+          >
+            <h3 class="font-mono text-cyan-400 mb-4">
+              A Note From The Creator
+            </h3>
+            <blockquote class="text-xl md:text-2xl italic text-slate-200">
+              "I built Cyberia Log because I needed a tool that was fast,
+              private, and focused on one thing: turning my data into a real
+              trading edge. Spreadsheets were clumsy and other journals were
+              slow or expensive. This is my solution. Now, it's free for
+              everyone."
+            </blockquote>
+            <cite class="block mt-6 font-bold text-slate-400 not-italic"
+              >— NAS</cite
+            >
+            <div class="flex items-center justify-center gap-6 mt-6">
+              <a
+                href="https://github.com/anas1412"
+                target="_blank"
+                class="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    fill-rule="evenodd"
+                    d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                    clip-rule="evenodd"
+                  />
+                </svg>
+                anas1412
+              </a>
+              <a
+                href="https://twitter.com/villainesthetic"
+                target="_blank"
+                class="flex items-center gap-2 text-slate-400 hover:text-cyan-400 transition-colors"
+              >
+                <svg
+                  class="w-5 h-5"
+                  fill="currentColor"
+                  viewBox="0 0 24 24"
+                  aria-hidden="true"
+                >
+                  <path
+                    d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"
+                  />
+                </svg>
+                villainesthetic
+              </a>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Final CTA & FAQ Section -->
+      <section class="py-20 sm:py-32 px-4 text-center">
+        <div class="container mx-auto">
+          <h2
+            class="text-4xl sm:text-5xl font-black text-slate-100"
+            data-scroll-reveal
+          >
+            Ready to Quantify Your Edge?
+          </h2>
+          <p
+            class="text-lg text-slate-400 max-w-2xl mx-auto mt-4 mb-10"
+            data-scroll-reveal
+          >
+            It's free. It's powerful. It's yours. Stop guessing and start
+            improving today.
+          </p>
+          <div
+            class="flex flex-col sm:flex-row items-center justify-center gap-4"
+            data-scroll-reveal
+          >
+            <a
+              href="https://cyberia.tn"
+              target="_blank"
+              class="w-full sm:w-auto px-10 py-4 text-lg font-bold text-slate-900 bg-cyan-400 rounded-md transition-all duration-300 hover:bg-cyan-300 btn-glow"
+            >
+              Launch Online Version
+            </a>
+          </div>
+
+          <!-- Mini FAQ -->
+          <div
+            class="max-w-2xl mx-auto mt-20 text-left grid grid-cols-1 md:grid-cols-2 gap-8"
+            data-scroll-reveal
+          >
+            <div>
+              <h4 class="font-bold text-slate-100">Is it really free?</h4>
+              <p class="text-slate-400 mt-1">
+                Yes. 100% free and open-source. No hidden fees, no
+                subscriptions. Ever.
+              </p>
+            </div>
+            <div>
+              <h4 class="font-bold text-slate-100">Is my data private?</h4>
+              <p class="text-slate-400 mt-1">
+                On the self-hosted version, your data never leaves your server.
+                For the online version, data is stored securely and is never
+                shared or sold. Your privacy is paramount.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-8 border-t border-slate-800">
+      <div class="container mx-auto text-center text-slate-500">
+        <p>
+          © 2024 Cyberia Log. Created by
+          <a
+            href="https://github.com/anas1412"
+            target="_blank"
+            class="text-cyan-400 hover:underline"
+            >NAS</a
+          >.
+        </p>
+      </div>
+    </footer>
+
+    <script>
+      // Animated Typing Effect
+      document.addEventListener("DOMContentLoaded", function () {
+        const textElement = document.getElementById("animated-text");
+        const words = [
+          "Quantify Your Edge.",
+          "Analyze Your Data.",
+          "Master Your Psychology.",
+          "Upgrade Your Trading.",
+        ];
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function type() {
+          const currentWord = words[wordIndex];
+          if (isDeleting) {
+            textElement.textContent = currentWord.substring(0, charIndex - 1);
+            charIndex--;
+          } else {
+            textElement.textContent = currentWord.substring(0, charIndex + 1);
+            charIndex++;
+          }
+
+          if (!isDeleting && charIndex === currentWord.length) {
+            setTimeout(() => (isDeleting = true), 2000);
+          } else if (isDeleting && charIndex === 0) {
+            isDeleting = false;
+            wordIndex = (wordIndex + 1) % words.length;
+          }
+
+          const typeSpeed = isDeleting ? 75 : 150;
+          setTimeout(type, typeSpeed);
+        }
+
+        type();
+      });
+
+      // Scroll Reveal Animation
+      document.addEventListener("DOMContentLoaded", function () {
+        const revealElements = document.querySelectorAll(
+          "[data-scroll-reveal]"
+        );
+
+        const observer = new IntersectionObserver(
+          (entries) => {
+            entries.forEach((entry) => {
+              if (entry.isIntersecting) {
+                entry.target.classList.add("is-visible");
+                observer.unobserve(entry.target);
+              }
+            });
+          },
+          {
+            threshold: 0.1,
+          }
+        );
+
+        revealElements.forEach((el) => {
+          observer.observe(el);
+        });
+      });
+    </script>
+  </body>
+</html>
