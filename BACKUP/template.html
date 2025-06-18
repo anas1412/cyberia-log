@@ -1,0 +1,903 @@
+<!-- LOGIN / SIGNUP VIEW -->
+<div x-show="currentView === 'login'" class="flex items-center justify-center min-h-screen">
+  <div class="w-full max-w-md p-8 space-y-4 bg-slate-800 rounded-lg shadow-lg border border-slate-700">
+    <div x-data="{ isLogin: true }">
+      <!--ERROR_MESSAGE-->
+      <form x-show="isLogin" action="index.php?action=login" method="POST" class="space-y-6">
+        <!--CSRF_TOKEN_FIELD-->
+        <h2 class="text-2xl font-bold text-center text-slate-100">
+          Welcome to Cyberia Log
+        </h2>
+        <div>
+          <label for="login-email" class="block text-sm font-medium text-slate-300">Email</label><input id="login-email"
+            name="email" type="email" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <div>
+          <label for="login-password" class="block text-sm font-medium text-slate-300">Password</label><input
+            id="login-password" name="password" type="password" required
+            class="w-full px-3 py-2 mt-1 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <button type="submit"
+          class="w-full px-4 py-2 font-bold text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition-colors">
+          Login
+        </button>
+        <p class="text-sm text-center text-slate-400">
+          Don't have an account?
+          <a href="#" @click.prevent="isLogin = false" class="font-medium text-cyan-400 hover:text-cyan-300">Sign up</a>
+        </p>
+      </form>
+      <form x-show="!isLogin" action="index.php?action=signup" method="POST" class="space-y-6">
+        <!--CSRF_TOKEN_FIELD-->
+        <h2 class="text-2xl font-bold text-center text-slate-100">
+          Create Account
+        </h2>
+        <div>
+          <label for="signup-codename" class="block text-sm font-medium text-slate-300">Codename</label><input
+            id="signup-codename" name="codename" type="text" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <div>
+          <label for="signup-email" class="block text-sm font-medium text-slate-300">Email (Gmail only)</label><input
+            id="signup-email" name="email" type="email" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <div>
+          <label for="signup-password" class="block text-sm font-medium text-slate-300">Password</label><input
+            id="signup-password" name="password" type="password" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <button type="submit"
+          class="w-full px-4 py-2 font-bold text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition-colors">
+          Create Account
+        </button>
+        <p class="text-sm text-center text-slate-400">
+          Already have an account?
+          <a href="#" @click.prevent="isLogin = true" class="font-medium text-cyan-400 hover:text-cyan-300">Login</a>
+        </p>
+      </form>
+    </div>
+  </div>
+</div>
+<!-- MAIN APPLICATION VIEW -->
+<div x-show="currentView === 'app'" class="min-h-screen">
+  <nav class="sticky top-0 z-40 bg-slate-800/80 backdrop-blur-sm border-b border-slate-700">
+    <div class="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+        <div class="flex items-center">
+          <span class="text-2xl font-bold text-cyan-400">Cyberia Log</span>
+          <div class="hidden md:block">
+            <div class="flex items-baseline ml-10 space-x-2">
+              <a href="#" @click.prevent="mainTab = 'dashboard'"
+                :class="{'bg-cyan-600 text-white': mainTab === 'dashboard', 'text-slate-300 hover:bg-slate-700 hover:text-white': mainTab !== 'dashboard'}"
+                class="px-3 py-2 text-sm font-medium rounded-md">Dashboard</a>
+              <a href="#" @click.prevent="mainTab = 'trades'"
+                :class="{'bg-cyan-600 text-white': mainTab === 'trades', 'text-slate-300 hover:bg-slate-700 hover:text-white': mainTab !== 'trades'}"
+                class="px-3 py-2 text-sm font-medium rounded-md">Trades</a>
+              <a href="#" @click.prevent="mainTab = 'accounts'"
+                :class="{'bg-cyan-600 text-white': mainTab === 'accounts', 'text-slate-300 hover:bg-slate-700 hover:text-white': mainTab !== 'accounts'}"
+                class="px-3 py-2 text-sm font-medium rounded-md">Accounts</a>
+              <a href="#" x-show="isAdmin" @click.prevent="mainTab = 'admin'"
+                :class="{'bg-cyan-600 text-white': mainTab === 'admin', 'text-slate-300 hover:bg-slate-700 hover:text-white': mainTab !== 'admin'}"
+                class="px-3 py-2 text-sm font-medium rounded-md">Admin</a>
+            </div>
+          </div>
+        </div>
+        <div class="flex items-center">
+          <form hx-post="index.php?action=set_account_filter" class="mr-4">
+            <!--CSRF_TOKEN_FIELD--><select name="account_id"
+              class="px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500"
+              hx-post="index.php?action=set_account_filter" hx-trigger="change">
+              <!--NAVBAR_ACCOUNT_OPTIONS-->
+            </select>
+          </form>
+          <span class="mr-4 text-slate-400">Welcome,
+            <!--CODENAME--></span>
+          <button @click.prevent="mainTab = 'settings'" title="Settings"
+            class="p-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-full transition-colors">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z" />
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+          <a href="index.php?action=logout" title="Logout"
+            class="p-2 ml-2 text-slate-400 hover:text-white hover:bg-slate-700 rounded-full transition-colors"><svg
+              xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg></a>
+        </div>
+      </div>
+    </div>
+  </nav>
+  <main>
+    <div class="py-10 mx-auto max-w-7xl sm:px-6 lg:px-8">
+      <div x-show="mainTab === 'dashboard'">
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+          <h1 class="text-3xl font-bold text-slate-100">Dashboard</h1>
+        </div>
+        <div id="dashboard-content"><!--DASHBOARD_CONTENT--></div>
+        <div class="mt-8">
+          <div class="p-4 bg-slate-800 rounded-lg shadow md:p-6">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-xl font-semibold text-slate-100">
+                Equity Curve
+              </h3>
+              <div class="flex space-x-1 p-1 bg-slate-700 rounded-md">
+                <button @click="equityChartUnit = 'amount'; initEquityChart()"
+                  :class="{'bg-cyan-600 text-white': equityChartUnit === 'amount', 'text-slate-300 hover:bg-slate-600': equityChartUnit !== 'amount'}"
+                  class="px-3 py-1 text-xs font-medium rounded-md transition-colors">
+                  $
+                </button>
+                <button @click="equityChartUnit = 'percent'; initEquityChart()"
+                  :class="{'bg-cyan-600 text-white': equityChartUnit === 'percent', 'text-slate-300 hover:bg-slate-600': equityChartUnit !== 'percent'}"
+                  class="px-3 py-1 text-xs font-medium rounded-md transition-colors">
+                  %
+                </button>
+              </div>
+            </div>
+            <div class="h-80"><canvas id="equityChart"></canvas></div>
+          </div>
+        </div>
+      </div>
+      <div x-show="mainTab === 'trades'">
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <h1 class="text-3xl font-bold text-slate-100">Trade History</h1>
+            <button @click="isTradeModalOpen = true"
+              class="px-4 py-2 font-bold text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors"
+              :disabled="!hasAccounts" :class="{ 'opacity-50 cursor-not-allowed': !hasAccounts }"
+              :title="hasAccounts ? 'Log a new trade' : 'You must add an account before logging a trade.'">
+              Log Trade
+            </button>
+          </div>
+          <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6 p-4 bg-slate-800/50 rounded-lg">
+            <div>
+              <label class="block text-xs font-medium text-slate-400 mb-1">Date Start</label><input type="date"
+                name="date_start" id="trade-date-start"
+                class="w-full px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500"
+                hx-get="index.php?action=get_trades_table" hx-trigger="change" hx-target="#trades-table-container"
+                hx-include="next .htmx-include" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-400 mb-1">Date End</label><input type="date"
+                name="date_end" id="trade-date-end"
+                class="w-full px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500"
+                hx-get="index.php?action=get_trades_table" hx-trigger="change" hx-target="#trades-table-container"
+                hx-include="next .htmx-include" />
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-400 mb-1">Outcome</label><select name="outcome"
+                id="trade-outcome"
+                class="w-full px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500 htmx-include"
+                hx-get="index.php?action=get_trades_table" hx-trigger="change" hx-target="#trades-table-container"
+                hx-include="#trade-date-start, #trade-date-end, #trade-direction, #trade-type">
+                <option value="all">All</option>
+                <option value="win">Win</option>
+                <option value="loss">Loss</option>
+                <option value="be">Break-Even</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-400 mb-1">Direction</label><select name="direction"
+                id="trade-direction"
+                class="w-full px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500 htmx-include"
+                hx-get="index.php?action=get_trades_table" hx-trigger="change" hx-target="#trades-table-container"
+                hx-include="#trade-date-start, #trade-date-end, #trade-outcome, #trade-type">
+                <option value="all">All</option>
+                <option value="long">Long</option>
+                <option value="short">Short</option>
+              </select>
+            </div>
+            <div>
+              <label class="block text-xs font-medium text-slate-400 mb-1">Type</label><select name="type"
+                id="trade-type"
+                class="w-full px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500 htmx-include"
+                hx-get="index.php?action=get_trades_table" hx-trigger="change" hx-target="#trades-table-container"
+                hx-include="#trade-date-start, #trade-date-end, #trade-outcome, #trade-direction">
+                <option value="all">All</option>
+                <option value="reversal">Reversal</option>
+                <option value="continuation">Continuation</option>
+              </select>
+            </div>
+          </div>
+          <div id="trades-table-container">
+            <!--TRADES_CONTENT-->
+          </div>
+        </div>
+      </div>
+      <div x-show="mainTab === 'accounts'">
+        <div>
+          <div class="flex flex-wrap items-center justify-between gap-4 mb-6">
+            <h1 class="text-3xl font-bold text-slate-100">Trading Accounts</h1>
+            <div class="flex items-center gap-4">
+              <select name="type" id="type-filter"
+                class="px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500"
+                hx-get="index.php?action=get_accounts_table" hx-trigger="change" hx-target="#accounts-table-container"
+                hx-include="#state-filter">
+                <option value="all">All Types</option>
+                <option value="personal">Personal</option>
+                <option value="challenge">Challenge</option>
+                <option value="verification">Verification</option>
+                <option value="funded">Funded</option>
+              </select><select name="state" id="state-filter"
+                class="px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500"
+                hx-get="index.php?action=get_accounts_table" hx-trigger="change" hx-target="#accounts-table-container"
+                hx-include="#type-filter">
+                <option value="all">All States</option>
+                <option value="active">Active</option>
+                <option value="passed">Passed</option>
+                <option value="failed">Failed</option>
+                <option value="disabled">Disabled</option>
+              </select><button @click="isAddModalOpen = true"
+                class="px-4 py-2 font-bold text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition-colors">
+                Add Account
+              </button>
+            </div>
+          </div>
+          <div id="accounts-table-container">
+            <!--ACCOUNTS_CONTENT-->
+          </div>
+        </div>
+      </div>
+      <div x-show="mainTab === 'admin' && isAdmin">
+        <h1 class="text-3xl font-bold text-slate-100 mb-6">User Management</h1>
+        <div class="flex flex-wrap items-center justify-between gap-4 mb-6 p-4 bg-slate-800/50 rounded-lg">
+          <div class="flex-grow max-w-lg">
+            <label for="user-search" class="sr-only">Search Users</label>
+            <div class="relative">
+              <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                <svg class="h-5 w-5 text-slate-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                  fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                    clip-rule="evenodd" />
+                </svg>
+              </div>
+              <input type="search" name="q" id="user-search"
+                class="w-full pl-10 pr-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500"
+                placeholder="Search by codename or email..." hx-get="index.php?action=get_admin_users_table"
+                hx-trigger="keyup changed delay:500ms, search" hx-target="#admin-users-table-container"
+                hx-swap="innerHTML" hx-include="#admin-role-filter" />
+            </div>
+          </div>
+          <div class="flex items-center">
+            <label for="admin-role-filter" class="mr-2 text-sm font-medium text-slate-300">Role:</label>
+            <select id="admin-role-filter" name="admin_filter"
+              class="px-3 py-2 text-sm bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500"
+              hx-get="index.php?action=get_admin_users_table" hx-trigger="change"
+              hx-target="#admin-users-table-container" hx-swap="innerHTML" hx-include="#user-search">
+              <option value="all">All Users</option>
+              <option value="admin">Admins Only</option>
+            </select>
+          </div>
+        </div>
+        <div id="admin-users-table-container">
+          <!--ADMIN_CONTENT-->
+        </div>
+      </div>
+      <div x-show="mainTab === 'settings'">
+        <h1 class="text-3xl font-bold text-slate-100 mb-6">Settings</h1>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+          <div class="p-6 bg-slate-800 rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-slate-100 mb-4">
+              Change Codename
+            </h3>
+            <form hx-post="index.php?action=change_codename" class="space-y-4">
+              <!--CSRF_TOKEN_FIELD-->
+              <div>
+                <label for="new_codename" class="block text-sm font-medium text-slate-300">New Codename</label><input
+                  id="new_codename" name="new_codename" type="text" required :value="userData.codename"
+                  class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+              </div>
+              <div class="flex justify-end pt-8">
+                <button type="submit"
+                  class="px-4 py-2 font-bold text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition-colors">
+                  Save Codename
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="p-6 bg-slate-800 rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-slate-100 mb-4">
+              Change Password
+            </h3>
+            <form id="change-password-form" hx-post="index.php?action=change_password" hx-trigger="submit"
+              @submit.prevent="setTimeout(() => $el.reset(), 500)" class="space-y-4">
+              <!--CSRF_TOKEN_FIELD-->
+              <div>
+                <label for="current_password" class="block text-sm font-medium text-slate-300">Current
+                  Password</label><input id="current_password" name="current_password" type="password" required
+                  class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+              </div>
+              <div>
+                <label for="new_password" class="block text-sm font-medium text-slate-300">New Password</label><input
+                  id="new_password" name="new_password" type="password" required
+                  class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+              </div>
+              <div>
+                <label for="confirm_password" class="block text-sm font-medium text-slate-300">Confirm New
+                  Password</label><input id="confirm_password" name="confirm_password" type="password" required
+                  class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+              </div>
+              <div class="flex justify-end">
+                <button type="submit"
+                  class="px-4 py-2 font-bold text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition-colors">
+                  Save Password
+                </button>
+              </div>
+            </form>
+          </div>
+          <div class="p-6 bg-slate-800 rounded-lg shadow">
+            <h3 class="text-xl font-semibold text-slate-100 mb-4">
+              Display Preferences
+            </h3>
+            <form hx-post="index.php?action=save_preferences" class="space-y-4">
+              <!--CSRF_TOKEN_FIELD-->
+              <div>
+                <label for="pnl_display_unit" class="block text-sm font-medium text-slate-300">Trades Table Format
+                  (Risk/PnL)</label><select id="pnl_display_unit" name="pnl_display_unit"
+                  x-model="userData.pnl_display_unit"
+                  class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+                  <option value="amount">Amount ($)</option>
+                  <option value="percent">Percent (%)</option>
+                  <option value="rr">R-Multiple (RR)</option>
+                </select>
+              </div>
+              <div>
+                <label for="calendar_pnl_unit" class="block text-sm font-medium text-slate-300">Calendar PnL
+                  Format</label><select id="calendar_pnl_unit" name="calendar_pnl_unit"
+                  x-model="userData.calendar_pnl_unit"
+                  class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+                  <option value="amount">Amount ($)</option>
+                  <option value="percent">Percent (%)</option>
+                  <option value="rr">R-Multiple (RR)</option>
+                </select>
+              </div>
+              <div class="flex justify-end pt-8">
+                <button type="submit"
+                  class="px-4 py-2 font-bold text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition-colors">
+                  Save Preferences
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <div class="bg-slate-800 p-6 rounded-lg shadow-lg mb-8 mt-8">
+          <div class="flex flex-col md:flex-row gap-6">
+            <div class="md:w-2/3">
+              <h2 class="text-2xl font-bold text-cyan-400 mb-4">What is Cyberia Log?</h2>
+              <p class="text-slate-300 mb-4">
+                Cyberia Log is a free comprehensive trading journal application designed to help traders track and
+                analyze their trading performance. Built with modern web technologies, it provides an intuitive
+                interface for logging trades, managing multiple accounts, and gaining insights through analytics.
+                Keep in mind that Cyberia Log is under developement. Please report to me if you encounter any bug.
+              </p>
+              <div class="flex flex-wrap gap-3 mb-4">
+                <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-slate-300">PHP</span>
+                <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-slate-300">Alpine.js</span>
+                <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-slate-300">HTMX</span>
+                <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-slate-300">Tailwind CSS</span>
+                <span class="px-3 py-1 bg-slate-700 rounded-full text-sm text-slate-300">SQLite</span>
+              </div>
+            </div>
+            <div class="md:w-1/3 flex flex-col justify-between text-right">
+              <div>
+                <h3 class="text-xl font-semibold text-slate-100 mb-3 inline-block mr-2">Created By</h3>
+                <p class="text-xl font-semibold text-slate-300 inline-block">NAS</p>
+                <div class="flex flex-col gap-4 mt-3">
+                  <p class="text-sm text-slate-400">For more information and updates,</p>
+                  <p class="text-sm text-slate-400">follow me & contact me.</p>
+                  <div class="flex gap-4 justify-end">
+                    <a href="https://github.com/anas1412" target="_blank"
+                      class="text-cyan-400 hover:text-cyan-300 flex items-center gap-2">
+                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path fill-rule="evenodd"
+                          d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+                          clip-rule="evenodd" />
+                      </svg>
+                      GitHub
+                    </a>
+                    <a href="https://twitter.com/villainesthetic" target="_blank"
+                      class="text-cyan-400 hover:text-cyan-300 flex items-center gap-2">
+                      <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path
+                          d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84" />
+                      </svg>
+                      Twitter
+                    </a>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <p class="text-sm text-slate-400">
+                  © 2024 Cyberia Log. All rights reserved.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+</div>
+
+
+
+
+</main>
+
+<!-- MODALS -->
+<div x-show="isAddModalOpen" @keydown.escape.window="isAddModalOpen = false"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+  <div @click.away="isAddModalOpen = false"
+    class="w-full max-w-lg p-6 bg-slate-800 rounded-lg shadow-xl border border-slate-700">
+    <h3 class="mb-4 text-xl font-semibold text-slate-100">
+      Add New Trading Account
+    </h3>
+    <form x-data="{ type: 'personal' }" hx-post="index.php?action=add_account" class="space-y-4">
+      <!--CSRF_TOKEN_FIELD-->
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Account Type</label><select x-model="type" name="type"
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+          <option value="personal">Personal</option>
+          <option value="challenge">Challenge</option>
+          <option value="verification">Verification</option>
+          <option value="funded">Funded</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">State</label><select name="state"
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+          <option value="active">Active</option>
+          <option value="passed">Passed</option>
+          <option value="failed">Failed</option>
+          <option value="disabled">Disabled</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Account Number</label><input type="text"
+          name="account_number" required
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+      </div>
+      <div x-data="{ show: false }">
+        <label class="block text-sm font-medium text-slate-300">Password</label>
+        <div class="relative">
+          <input :type="show ? 'text' : 'password'" name="password"
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" /><button
+            type="button" @click="show = !show"
+            class="absolute inset-y-0 right-0 px-3 text-sm text-slate-400 hover:text-cyan-400">
+            <span x-text="show ? 'Hide' : 'Show'"></span>
+          </button>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Platform</label><select name="platform"
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+          <option>MT4</option>
+          <option>MT5</option>
+          <option>cTrader</option>
+          <option>MatchTrader</option>
+          <option>TradeLocker</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Starting Capital</label><input type="number" step="0.01"
+          name="starting_capital" required
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Prop Firm</label><input type="text" name="prop_firm"
+          :disabled="type === 'personal'"
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          placeholder="N/A for Personal accounts" />
+      </div>
+      <div class="flex justify-end pt-4 space-x-2">
+        <button type="button" @click="isAddModalOpen = false"
+          class="px-4 py-2 font-medium text-slate-200 bg-slate-600 rounded-md hover:bg-slate-500 transition-colors">
+          Cancel</button><button type="submit"
+          class="px-4 py-2 font-bold text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition-colors">
+          Save Account
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<div x-show="isEditModalOpen" @keydown.escape.window="isEditModalOpen = false"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+  <div @click.away="isEditModalOpen = false"
+    class="w-full max-w-lg p-6 bg-slate-800 rounded-lg shadow-xl border border-slate-700">
+    <h3 class="mb-4 text-xl font-semibold text-slate-100">
+      Edit Trading Account
+    </h3>
+    <form hx-post="index.php?action=update_account" class="space-y-4">
+      <input type="hidden" name="id" :value="editingAccount.id" /><!--CSRF_TOKEN_FIELD-->
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Account Type</label><select
+          x-model="editingAccount.type" name="type"
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+          <option value="personal">Personal</option>
+          <option value="challenge">Challenge</option>
+          <option value="verification">Verification</option>
+          <option value="funded">Funded</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">State</label><select x-model="editingAccount.state"
+          name="state"
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+          <option value="active">Active</option>
+          <option value="passed">Passed</option>
+          <option value="failed">Failed</option>
+          <option value="disabled">Disabled</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Account Number</label><input type="text"
+          x-model="editingAccount.account_number" name="account_number" required
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+      </div>
+      <div x-data="{ show: false }">
+        <label class="block text-sm font-medium text-slate-300">Password</label>
+        <div class="relative">
+          <input :type="show ? 'text' : 'password'" x-model="editingAccount.password" name="password"
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" /><button
+            type="button" @click="show = !show"
+            class="absolute inset-y-0 right-0 px-3 text-sm text-slate-400 hover:text-cyan-400">
+            <span x-text="show ? 'Hide' : 'Show'"></span>
+          </button>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Platform</label><select
+          x-model="editingAccount.platform" name="platform"
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+          <option>MT4</option>
+          <option>MT5</option>
+          <option>cTrader</option>
+          <option>MatchTrader</option>
+          <option>TradeLocker</option>
+        </select>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Starting Capital</label><input type="number" step="0.01"
+          x-model="editingAccount.starting_capital" name="starting_capital" required
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Prop Firm</label><input type="text"
+          x-model="editingAccount.prop_firm" name="prop_firm" :disabled="editingAccount.type === 'personal'"
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500 disabled:opacity-50 disabled:cursor-not-allowed"
+          placeholder="N/A for Personal accounts" />
+      </div>
+      <div class="flex justify-end pt-4 space-x-2">
+        <button type="button" @click="isEditModalOpen = false"
+          class="px-4 py-2 font-medium text-slate-200 bg-slate-600 rounded-md hover:bg-slate-500 transition-colors">
+          Cancel</button><button type="submit"
+          class="px-4 py-2 font-bold text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition-colors">
+          Update Account
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<div x-show="isTradeModalOpen" @keydown.escape.window="isTradeModalOpen = false"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+  <div @click.away="isTradeModalOpen = false"
+    class="w-full max-w-2xl p-6 bg-slate-800 rounded-lg shadow-xl border border-slate-700">
+    <h3 class="mb-4 text-xl font-semibold text-slate-100">Log New Trade</h3>
+    <form hx-post="index.php?action=add_trade" class="space-y-4">
+      <!--CSRF_TOKEN_FIELD-->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Account</label><select name="account_id" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+            <!--MODAL_ACCOUNT_OPTIONS-->
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Date</label><input type="date" name="date" required
+            :value="new Date().toISOString().slice(0, 10)"
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Instrument</label><input type="text" name="instrument"
+            required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Outcome</label><select name="outcome" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+            <option value="win">Win</option>
+            <option value="loss">Loss</option>
+            <option value="be">Break-Even</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Risk Amount ($)</label><input type="number"
+            step="0.01" name="risk_amount" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">PnL Amount ($)</label><input type="number" step="0.01"
+            name="pnl_amount" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Direction</label><select name="direction" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+            <option value="long">Long</option>
+            <option value="short">Short</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Type</label><select name="type" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+            <option value="reversal">Reversal</option>
+            <option value="continuation">Continuation</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Screenshot Link</label><input type="url"
+          name="screenshot_link" placeholder="https://..."
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Notes</label><textarea name="notes" rows="3"
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500"></textarea>
+      </div>
+      <div class="flex justify-end pt-4 space-x-2">
+        <button type="button" @click="isTradeModalOpen = false"
+          class="px-4 py-2 font-medium text-slate-200 bg-slate-600 rounded-md hover:bg-slate-500 transition-colors">
+          Cancel</button><button type="submit"
+          class="px-4 py-2 font-bold text-white bg-green-600 rounded-md hover:bg-green-700 transition-colors">
+          Save Trade
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<div x-show="isEditTradeModalOpen" @keydown.escape.window="isEditTradeModalOpen = false"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+  <div @click.away="isEditTradeModalOpen = false"
+    class="w-full max-w-2xl p-6 bg-slate-800 rounded-lg shadow-xl border border-slate-700">
+    <h3 class="mb-4 text-xl font-semibold text-slate-100">Edit Trade</h3>
+    <form hx-post="index.php?action=update_trade" class="space-y-4">
+      <input type="hidden" name="id" :value="editingTrade.id" /><!--CSRF_TOKEN_FIELD-->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Account</label><select name="account_id"
+            x-model="editingTrade.account_id" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+            <!--MODAL_ACCOUNT_OPTIONS-->
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Date</label><input type="date" name="date"
+            x-model="editingTrade.date" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Instrument</label><input type="text" name="instrument"
+            x-model="editingTrade.instrument" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Outcome</label><select name="outcome"
+            x-model="editingTrade.outcome" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+            <option value="win">Win</option>
+            <option value="loss">Loss</option>
+            <option value="be">Break-Even</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Risk Amount ($)</label><input type="number"
+            step="0.01" name="risk_amount" x-model="editingTrade.risk_amount" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">PnL Amount ($)</label><input type="number" step="0.01"
+            name="pnl_amount" x-model="editingTrade.pnl_amount" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Direction</label><select name="direction"
+            x-model="editingTrade.direction" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+            <option value="long">Long</option>
+            <option value="short">Short</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-sm font-medium text-slate-300">Type</label><select name="type"
+            x-model="editingTrade.type" required
+            class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500">
+            <option value="reversal">Reversal</option>
+            <option value="continuation">Continuation</option>
+          </select>
+        </div>
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Screenshot Link</label><input type="url"
+          name="screenshot_link" x-model="editingTrade.screenshot_link"
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500" />
+      </div>
+      <div>
+        <label class="block text-sm font-medium text-slate-300">Notes</label><textarea name="notes" rows="3"
+          x-model="editingTrade.notes"
+          class="w-full px-3 py-2 mt-1 bg-slate-700 border border-slate-600 rounded-md text-slate-200 focus:ring-cyan-500 focus:border-cyan-500"></textarea>
+      </div>
+      <div class="flex justify-end pt-4 space-x-2">
+        <button type="button" @click="isEditTradeModalOpen = false"
+          class="px-4 py-2 font-medium text-slate-200 bg-slate-600 rounded-md hover:bg-slate-500 transition-colors">
+          Cancel</button><button type="submit"
+          class="px-4 py-2 font-bold text-white bg-cyan-600 rounded-md hover:bg-cyan-700 transition-colors">
+          Update Trade
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+<div x-show="isNoteModalOpen" @keydown.escape.window="isNoteModalOpen = false"
+  class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-70">
+  <div @click.away="isNoteModalOpen = false"
+    class="w-full max-w-lg p-6 bg-slate-800 rounded-lg shadow-xl border border-slate-700">
+    <h3 class="mb-4 text-xl font-semibold text-slate-100">Trade Note</h3>
+    <div class="max-h-96 overflow-y-auto pr-2">
+      <p class="whitespace-pre-wrap text-slate-300" x-text="viewingNote"></p>
+    </div>
+    <div class="flex justify-end pt-4">
+      <button type="button" @click="isNoteModalOpen = false"
+        class="px-4 py-2 font-medium text-slate-200 bg-slate-600 rounded-md hover:bg-slate-500 transition-colors">
+        Close
+      </button>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+  function app() {
+    const initialDataEl = document.getElementById("alpine-init-data");
+    const initialData = initialDataEl
+      ? JSON.parse(initialDataEl.textContent)
+      : {};
+    return {
+      ...initialData,
+      mainTab: localStorage.getItem("mainTab") || "dashboard",
+      equityChartUnit: 'amount', // State for the chart unit
+      isAddModalOpen: false,
+      isEditModalOpen: false,
+      isTradeModalOpen: false,
+      isEditTradeModalOpen: false,
+      isNoteModalOpen: false,
+      editingAccount: {},
+      editingTrade: {},
+      viewingNote: "",
+      userData: initialData.userData || {
+        codename: "Guest",
+        pnl_display_unit: "amount",
+        calendar_pnl_unit: "amount",
+      },
+      init() {
+        this.$watch("mainTab", (value) => {
+          localStorage.setItem("mainTab", value);
+          if (value === "dashboard") {
+            setTimeout(() => this.initEquityChart(), 50);
+          }
+        });
+
+        if (this.mainTab === "dashboard") {
+          setTimeout(() => this.initEquityChart(), 50);
+        }
+      },
+      async initEquityChart() {
+        if (typeof Chart === "undefined") return;
+
+        const response = await fetch("index.php?action=get_equity_data");
+        if (!response.ok) return;
+        const chartData = await response.json();
+
+        const ctx = document.getElementById("equityChart");
+        if (!ctx) return;
+
+        if (window.myEquityChart instanceof Chart) {
+          window.myEquityChart.destroy();
+        }
+        
+        const isAmount = this.equityChartUnit === 'amount';
+        const data = isAmount ? chartData.data_amount : chartData.data_percent;
+
+        const gradient = ctx
+          .getContext("2d")
+          .createLinearGradient(0, 0, 0, 320);
+        gradient.addColorStop(0, "rgba(74, 222, 128, 0.4)");
+        gradient.addColorStop(1, "rgba(14, 165, 233, 0)");
+
+        window.myEquityChart = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: chartData.labels,
+            datasets: [
+              {
+                label: "Equity",
+                data: data,
+                borderColor: "rgb(74, 222, 128)",
+                backgroundColor: gradient,
+                fill: true,
+                tension: 0.2,
+                pointBackgroundColor: "rgb(74, 222, 128)",
+                pointRadius: data.length > 50 ? 0 : 3,
+                pointHoverRadius: 5,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: function (context) {
+                    if (isAmount) {
+                      return " Balance: $" + context.parsed.y.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+                    } else {
+                      return " Growth: " + context.parsed.y.toFixed(2) + "%";
+                    }
+                  },
+                },
+              },
+            },
+            scales: {
+              y: {
+                ticks: {
+                  color: "rgb(156 163 175)",
+                  callback: function (value) {
+                    return isAmount ? "$" + value.toLocaleString() : value + "%";
+                  },
+                },
+                grid: { color: "rgba(71, 85, 105, 0.5)" },
+              },
+              x: {
+                ticks: { color: "rgb(156 163 175)" },
+                grid: { display: false },
+              },
+            },
+          },
+        });
+      },
+      async openEditModal(accountId) {
+        const response = await fetch(
+          `index.php?action=get_account_details&id=${accountId}`
+        );
+        if (response.ok) {
+          this.editingAccount = await response.json();
+          this.isEditModalOpen = true;
+        } else {
+          alert("Error fetching account details.");
+        }
+      },
+      async openEditTradeModal(tradeId) {
+        const response = await fetch(
+          `index.php?action=get_trade_details&id=${tradeId}`
+        );
+        if (response.ok) {
+          this.editingTrade = await response.json();
+          this.isEditTradeModalOpen = true;
+        } else {
+          alert("Error fetching trade details.");
+        }
+      },
+      openNoteModal(note) {
+        this.viewingNote = note;
+        this.isNoteModalOpen = true;
+      },
+    };
+  }
+</script>
