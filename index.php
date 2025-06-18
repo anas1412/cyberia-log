@@ -1,4 +1,17 @@
 <?php
+
+if (!function_exists('str_ends_with')) {
+    function str_ends_with($haystack, $needle) {
+        $haystack = (string)$haystack;
+        $needle = (string)$needle;
+        if ($needle === '') {
+            return true;
+        }
+        return substr($haystack, -strlen($needle)) === $needle;
+    }
+}
+
+
 // ========== CONFIGURATION & INITIALIZATION ==========
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
