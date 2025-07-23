@@ -80,7 +80,20 @@ Follow these instructions to get Cyberia Log up and running on your local machin
 
     - Point your web server's document root to the `cyberia-log` directory where `index.php` is located.
 
-3.  **Set File Permissions:**
+    ```
+
+3.  **Configure the Application:**
+
+    - This project uses a `config.php` file for essential settings. A `config.php.example` file is included in the repository.
+    - Create a copy of the example file and name it `config.php`:
+
+    ```bash
+    cp config.php.example config.php
+    ```
+
+    - Open `config.php` and customize the settings if needed. The default values are suitable for a standard setup.
+
+4.  **Set File Permissions:**
 
     - The web server needs permission to create and write to the SQLite database file. On Linux, you can grant permission to the directory:
 

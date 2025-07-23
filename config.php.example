@@ -1,0 +1,15 @@
+<?php
+
+// Database
+define('DB_FILE', __DIR__ . '/trader_journal.sqlite');
+
+// Pagination
+define('PER_PAGE', 10);
+
+// Admin User on First Run
+// IMPORTANT: Change the password in the settings after your first login.
+define('ADMIN_EMAIL', 'admin@mail.com');
+define('ADMIN_CODENAME', 'Admin');
+define('ADMIN_PASSWORD', 'admin1412');
+
+?>

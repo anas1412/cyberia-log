@@ -1,2 +1,2 @@
-./BACKUP/*
-*.sqlite
+config.php
+trader_journal.sqlite

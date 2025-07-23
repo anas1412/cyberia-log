@@ -13,11 +13,10 @@ if (!function_exists('str_ends_with')) {
 
 
 // ========== CONFIGURATION & INITIALIZATION ==========
+require_once __DIR__ . '/config.php';
+
 ini_set('display_errors', 1);
 error_reporting(E_ALL);
-
-define('DB_FILE', __DIR__ . '/trader_journal.sqlite');
-define('PER_PAGE', 10); // Items per page for all tables
 
 // ========== SECURE SESSION SETUP ==========
 session_set_cookie_params(['lifetime' => 86400, 'path' => '/', 'domain' => '', 'secure' => isset($_SERVER['HTTPS']), 'httponly' => true, 'samesite' => 'Strict']);
@@ -41,7 +40,7 @@ function initDB() {
             $db->exec("CREATE TABLE users (id INTEGER PRIMARY KEY, email TEXT UNIQUE NOT NULL, password TEXT NOT NULL, codename TEXT NOT NULL, is_admin BOOLEAN DEFAULT 0, pnl_display_unit TEXT DEFAULT 'amount', calendar_pnl_unit TEXT DEFAULT 'amount')");
             $db->exec("CREATE TABLE accounts (id INTEGER PRIMARY KEY, user_id INTEGER NOT NULL, account_number TEXT NOT NULL, password TEXT, type TEXT NOT NULL, platform TEXT, state TEXT DEFAULT 'active', starting_capital REAL NOT NULL, current_capital REAL NOT NULL, prop_firm TEXT, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)");
             $db->exec("CREATE TABLE trades (id INTEGER PRIMARY KEY, account_id INTEGER NOT NULL, user_id INTEGER NOT NULL, date TEXT NOT NULL, instrument TEXT NOT NULL, outcome TEXT NOT NULL, risk_amount REAL DEFAULT 0, pnl_amount REAL DEFAULT 0, direction TEXT, type TEXT, screenshot_link TEXT, notes TEXT, FOREIGN KEY (account_id) REFERENCES accounts(id) ON DELETE CASCADE, FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE)");
-            $admin_email = 'admin@mail.com'; $admin_codename = 'Admin'; $admin_password = password_hash('admin1412', PASSWORD_DEFAULT);
+            $admin_email = ADMIN_EMAIL; $admin_codename = ADMIN_CODENAME; $admin_password = password_hash(ADMIN_PASSWORD, PASSWORD_DEFAULT);
             $stmt = $db->prepare("INSERT INTO users (email, codename, password, is_admin) VALUES (?, ?, ?, 1)");
             $stmt->execute([$admin_email, $admin_codename, $admin_password]);
         } else {
